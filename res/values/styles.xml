@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Ground" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/ground</item>
+        <item name="android:colorBackground">@color/ground</item>
+        <item name="android:statusBarColor">@color/ground</item>
+        <item name="android:navigationBarColor">@color/ground</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Our own handles for picked words; from Android 10 they are also
+             tinted with the seed while the application runs. -->
+        <item name="android:textSelectHandle">@drawable/caret_mid</item>
+        <item name="android:textSelectHandleLeft">@drawable/caret_left</item>
+        <item name="android:textSelectHandleRight">@drawable/caret_right</item>
+        <item name="android:colorControlActivated">#FF855314</item>
+        <item name="android:colorAccent">#FF855314</item>
+    </style>
+</resources>

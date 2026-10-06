@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A letter i whose dot is a gold ball, and a star beside it, on lilac.
+     The cloth and the things on it are separate layers, so the things can
+     be laid on another cloth elsewhere. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_back" />
+    <foreground android:drawable="@drawable/ic_fg" />
+    <monochrome android:drawable="@drawable/ic_mono" />
+</adaptive-icon>

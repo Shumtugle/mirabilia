@@ -1,0 +1,740 @@
+# a language for this collection
+# fill the empty lines and load the file back
+
+module untitled
+
+# pictures
+pictures	
+
+# videos
+films	
+
+# recordings
+music	
+
+# books
+books	
+
+# nothing framed yet
+empty_pictures	
+
+# no reels yet
+empty_films	
+
+# silence, for now
+empty_music	
+
+# the shelf is bare
+empty_books	
+
+# what you gather will stand here
+empty_what	
+
+# settings
+settings	
+
+# colour
+look	
+
+# one seed, and every colour grows from it
+look_what	
+
+# hue
+hue	
+
+# richness
+richness	
+
+# from the wallpaper
+wallpaper	
+
+# primary
+sw_primary	
+
+# secondary
+sw_secondary	
+
+# tertiary
+sw_tertiary	
+
+# ground
+sw_ground	
+
+# language
+language	
+
+# english lives inside; every other language is a module
+language_what	
+
+# english
+english	
+
+# {n} of {m} words
+words_of	
+
+# load a module
+module_load	
+
+# save the template
+module_save	
+
+# use english
+use_english	
+
+# the language is taken
+module_taken	
+
+# this is not a language module
+module_bad	
+
+# the template is saved
+module_saved	
+
+# it could not be saved
+unsaved	
+
+# open a folder
+open_folder	
+
+# the rooms are gathered from the folders you open to them
+folders_what	
+
+# gathering the shelf
+gathering	
+
+# on the shelf: {n}
+on_shelf	
+
+# still reading
+continue	
+
+# page {n}
+page_n	
+
+# this one cannot be read here
+unreadable	
+
+# mark this page
+mark_page	
+
+# take the mark away
+unmark_page	
+
+# page marked
+marked	
+
+# mark taken away
+unmarked	
+
+# marks
+marks	
+
+# no marks in this book yet
+no_marks	
+
+# read aloud
+aloud	
+
+# stop reading aloud
+aloud_stop	
+
+# turn the pages by themselves
+turning	
+
+# stop turning
+turning_stop	
+
+# pick words
+pick	
+
+# fifteen seconds back
+voice_back	
+
+# thirty seconds on
+voice_on	
+
+# hold the voice
+voice_hold	
+
+# go on reading
+voice_go	
+
+# folders
+folders	
+
+# a folder was taken back and has left the shelf
+folders_lost	
+
+# this folder is on the shelf already, inside another
+folder_there	
+
+# folders inside it are now part of it: {n}
+folders_joined	
+
+# recordings: {n}
+in_folder	
+
+# at {w}
+folder_on	
+
+# {n} of {m}
+row_of	
+
+# words whose english has changed since the module was made: {n}
+stale	
+
+# share the book
+share_book	
+
+# every recording the phone knows of, less ringtones, notifications, voice messages and the recorder; turning it on asks the system for leave to read audio
+sounds_whole_what	
+
+# by number
+order_numbers	
+
+# by time
+order_time	
+
+# today
+today	
+
+# this week
+this_week	
+
+# this month
+this_month	
+
+# this year
+this_year	
+
+# earlier
+earlier	
+
+# pictures: {n}
+photos_n	
+
+# every picture
+all_photos	
+
+# show the pictures
+allow_photos	
+
+# the phone's own pictures, by the day each was taken; the system will ask for leave to see them
+photos_what	
+
+# videos: {n}
+videos_n	
+
+# every video
+all_videos	
+
+# show the videos
+allow_videos	
+
+# the phone's own videos, by the day each was made; the system will ask for leave to see them
+videos_what	
+
+# still watching
+continue_video	
+
+# speed
+speed	
+
+# keep the frame
+save_frame	
+
+# the frame is among the pictures
+frame_kept	
+
+# sound
+sounding	
+
+# what sounds when the window goes
+sounding_what	
+
+# videos in the background
+film_behind	
+
+# leaving a video while it plays, its sound goes on, with the phone's own sound keys; back on it, the picture goes on from where the sound got to
+film_behind_what	
+
+# this video does not let its speed be changed
+speed_refused	
+
+# paper
+paper	
+
+# size of the letters
+letter_size	
+
+# day
+paper_day	
+
+# night
+paper_night	
+
+# sound of the pages
+page_sound	
+
+# edit in?
+edit_in	
+
+# turn
+turn	
+
+# into the excerpts
+to_excerpts	
+
+# excerpts
+excerpts	
+
+# it is among the excerpts
+excerpt_kept	
+
+# the name of a file or a folder
+find_hint	
+
+# words from the name of a file or of its folder; what has every one of them is found
+find_what	
+
+# found: {n}
+found_n	
+
+# nothing by that name
+found_none	
+
+# new name
+new_name	
+
+# rename
+rename	
+
+# delete
+delete	
+
+# again, and it is deleted
+delete_sure	
+
+# renamed
+renamed	
+
+# deleted
+deleted	
+
+# it could not be done
+not_done	
+
+# the folder still allows reading only
+read_only	
+
+# a file of that name is already there
+name_taken	
+
+# the file is no longer where it was
+moved_away	
+
+# about the picture
+about_picture	
+
+# name
+fact_name	
+
+# taken
+fact_taken	
+
+# camera
+fact_camera	
+
+# lens
+fact_lens	
+
+# exposure
+fact_exposure	
+
+# size
+fact_size	
+
+# where it was taken
+fact_where	
+
+# where it lies
+fact_lies	
+
+# {n} mm
+mm_n	
+
+# {n} MP
+mp_n	
+
+# {n} MB
+mb_n	
+
+# {n} KB
+kb_n	
+
+# touch up
+mend	
+
+# light
+mend_light	
+
+# frame
+mend_frame	
+
+# as it is
+as_is	
+
+# photograph
+for_photo	
+
+# paper
+for_paper	
+
+# kept as a copy
+copy_kept	
+
+# geometry
+mend_geometry	
+
+# automatic
+p_auto	
+
+# brightness
+p_bright	
+
+# contrast
+p_contrast	
+
+# warmth
+p_warm	
+
+# saturation
+p_saturation	
+
+# shape
+p_shape	
+
+# closer
+p_closer	
+
+# angle
+p_angle	
+
+# lean, up and down
+p_tilt_v	
+
+# lean, side to side
+p_tilt_h	
+
+# lens
+p_lens	
+
+# sharpness
+p_sharp	
+
+# size
+p_size	
+
+# take a picture
+shoot	
+
+# no camera answers on this phone
+no_camera	
+
+# taken and kept
+shot_kept	
+
+# the camera gave nothing back
+camera_empty	
+
+# free
+free	
+
+# leave without keeping
+leave_unsaved	
+
+# frame {n} of {m}
+frame_n	
+
+# piece
+recut_piece	
+
+# words
+recut_words	
+
+# title
+tag_title	
+
+# artist
+tag_artist	
+
+# album
+tag_album	
+
+# number
+tag_track	
+
+# year
+tag_year	
+
+# the words are written
+words_kept	
+
+# to covers
+to_covers	
+
+# the cover is in the collection
+cover_taken	
+
+# covers taken: {n}
+covers_n	
+
+# that cover is there already
+cover_there	
+
+# no cover in it
+cover_none	
+
+# cover
+cover	
+
+# give it a cover
+set_cover	
+
+# another cover
+change_cover	
+
+# tags to text
+tags_to_text	
+
+# the tags are written down
+card_kept	
+
+# cards written: {n}
+cards_n	
+
+# that card is there already
+card_there	
+
+# sleep
+sleep	
+
+# never
+sleep_never	
+
+# at the end
+sleep_end	
+
+# not set
+sleep_not_set	
+
+# quiet at {t}
+sleep_at	
+
+# after this one
+sleep_after_this	
+
+# {n} min
+minutes_n	
+
+# again
+again	
+
+# no
+again_none	
+
+# this one
+again_one	
+
+# the folder
+again_folder	
+
+# the run before
+log_before	
+
+# the whole shelf
+whole_shelf	
+
+# pictures
+seeing	
+
+# how pictures are shown
+seeing_what	
+
+# full brightness
+bright	
+
+# an opened picture lights the screen at its brightest, for as long as it is open
+bright_what	
+
+# always
+bright_always	
+
+# by the clock
+bright_hours	
+
+# from
+bright_from	
+
+# until
+bright_to	
+
+# January
+month_1	
+
+# February
+month_2	
+
+# March
+month_3	
+
+# April
+month_4	
+
+# May
+month_5	
+
+# June
+month_6	
+
+# July
+month_7	
+
+# August
+month_8	
+
+# September
+month_9	
+
+# October
+month_10	
+
+# November
+month_11	
+
+# December
+month_12	
+
+# with subfolders
+deep_on	
+
+# without subfolders
+deep_off	
+
+# forget the folder
+forget	
+
+# press again to forget
+forget_sure	
+
+# from the whole phone
+whole	
+
+# every book the phone knows of, wherever it lies; turning it on opens the system's page for access to every file
+whole_what	
+
+# allow in the system settings
+allow	
+
+# phone
+on_phone	
+
+# card
+on_card	
+
+# read without distractions
+quiet	
+
+# the middle of the page brings everything back
+quiet_hint	
+
+# bring everything back
+quiet_off	
+
+# p. {n}
+page_short	
+
+# in the room: {n}
+in_room	
+
+# still listening
+continue_sound	
+
+# stopped at {t}
+left_at	
+
+# recordings are gathered from the folders you open, and from everything inside them
+sounds_what	
+
+# done
+done	
+
+# copy
+copy	
+
+# copied
+copied	
+
+# the whole page
+all_text	
+
+# read aloud from here
+aloud_here	
+
+# share
+share	
+
+# depth of glass
+glass	
+
+# how dark the widget lies over the wallpaper, in tenths
+glass_what	
+
+# of {n} pages
+page_of	
+
+# of {t}
+time_of	
+
+# widget
+widget	
+
+# how the widget on the home screen looks
+widget_what	
+
+# ground
+ground	
+
+# the seed
+ground_seed	
+
+# glass
+ground_glass	
+
+# key
+key_face	
+
+# gold ball
+key_ball	
+
+# record
+key_disc	
+
+# scale
+scale	
+
+# drum
+scale_drum	
+
+# thread
+scale_thread	
+
+# journal
+log	
+
+# what the application did, to send when something goes wrong
+log_what	
+
+# copy the journal
+log_copy	
+

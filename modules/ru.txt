@@ -1,0 +1,740 @@
+# a language for this collection
+# fill the empty lines and load the file back
+
+module Русский
+
+# pictures
+pictures	Фото
+
+# videos
+films	Видео
+
+# recordings
+music	Фонотека
+
+# books
+books	Книги
+
+# nothing framed yet
+empty_pictures	Пока ни одной рамки
+
+# no reels yet
+empty_films	Ни одной катушки
+
+# silence, for now
+empty_music	Пока тишина
+
+# the shelf is bare
+empty_books	Полка пуста
+
+# what you gather will stand here
+empty_what	Здесь встанет всё, что соберёшь
+
+# settings
+settings	Настройки
+
+# colour
+look	Цвет
+
+# one seed, and every colour grows from it
+look_what	Одно семя, и из него растут все цвета
+
+# hue
+hue	Оттенок
+
+# richness
+richness	Насыщенность
+
+# from the wallpaper
+wallpaper	От обоев
+
+# primary
+sw_primary	Основной
+
+# secondary
+sw_secondary	Второй
+
+# tertiary
+sw_tertiary	Третий
+
+# ground
+sw_ground	Фон
+
+# language
+language	Язык
+
+# english lives inside; every other language is a module
+language_what	Английский живёт внутри, любой другой язык — модуль
+
+# english
+english	Английский
+
+# {n} of {m} words
+words_of	{n} из {m} слов
+
+# load a module
+module_load	Загрузить модуль
+
+# save the template
+module_save	Сохранить шаблон
+
+# use english
+use_english	Вернуть английский
+
+# the language is taken
+module_taken	Язык принят
+
+# this is not a language module
+module_bad	Это не языковой модуль
+
+# the template is saved
+module_saved	Шаблон сохранён
+
+# it could not be saved
+unsaved	Сохранить не удалось
+
+# open a folder
+open_folder	Открыть папку
+
+# the rooms are gathered from the folders you open to them
+folders_what	Залы собираются из папок, открытых для них
+
+# gathering the shelf
+gathering	Собираю полку
+
+# on the shelf: {n}
+on_shelf	На полке: {n}
+
+# still reading
+continue	Недочитанное
+
+# page {n}
+page_n	страница {n}
+
+# this one cannot be read here
+unreadable	Эту книгу здесь не прочесть
+
+# mark this page
+mark_page	Заложить страницу
+
+# take the mark away
+unmark_page	Убрать закладку
+
+# page marked
+marked	Страница заложена
+
+# mark taken away
+unmarked	Закладка убрана
+
+# marks
+marks	Закладки
+
+# no marks in this book yet
+no_marks	В этой книге пока нет закладок
+
+# read aloud
+aloud	Читать вслух
+
+# stop reading aloud
+aloud_stop	Перестать читать
+
+# turn the pages by themselves
+turning	Листать без рук
+
+# stop turning
+turning_stop	Перестать листать
+
+# pick words
+pick	Выделить слова
+
+# fifteen seconds back
+voice_back	15 секунд назад
+
+# thirty seconds on
+voice_on	30 секунд вперёд
+
+# hold the voice
+voice_hold	Придержать голос
+
+# go on reading
+voice_go	Читать дальше
+
+# folders
+folders	Папки
+
+# a folder was taken back and has left the shelf
+folders_lost	Одну из папок забрали обратно, она ушла с полки
+
+# this folder is on the shelf already, inside another
+folder_there	Эта папка уже на полке, внутри другой
+
+# folders inside it are now part of it: {n}
+folders_joined	Вложенные папки вошли в неё: {n}
+
+# recordings: {n}
+in_folder	Записей: {n}
+
+# at {w}
+folder_on	на {w}
+
+# {n} of {m}
+row_of	{n} из {m}
+
+# words whose english has changed since the module was made: {n}
+stale	Устарело слов: {n}
+
+# share the book
+share_book	Поделиться книгой
+
+# every recording the phone knows of, less ringtones, notifications, voice messages and the recorder; turning it on asks the system for leave to read audio
+sounds_whole_what	Все записи, о которых знает телефон, кроме рингтонов, уведомлений, голосовых сообщений и диктофона. Включишь — система спросит доступ к аудио
+
+# by number
+order_numbers	По номерам
+
+# by time
+order_time	По времени
+
+# today
+today	Сегодня
+
+# this week
+this_week	На этой неделе
+
+# this month
+this_month	В этом месяце
+
+# this year
+this_year	В этом году
+
+# earlier
+earlier	Раньше
+
+# pictures: {n}
+photos_n	Снимков: {n}
+
+# every picture
+all_photos	Все снимки
+
+# show the pictures
+allow_photos	Показать снимки
+
+# the phone's own pictures, by the day each was taken; the system will ask for leave to see them
+photos_what	Снимки телефона по дням съёмки. Система спросит разрешение их видеть
+
+# videos: {n}
+videos_n	Видео: {n}
+
+# every video
+all_videos	Все видео
+
+# show the videos
+allow_videos	Показать видео
+
+# the phone's own videos, by the day each was made; the system will ask for leave to see them
+videos_what	Видео телефона по дням съёмки. Система спросит разрешение их видеть
+
+# still watching
+continue_video	Недосмотренное
+
+# speed
+speed	Скорость
+
+# keep the frame
+save_frame	Сохранить кадр
+
+# the frame is among the pictures
+frame_kept	Кадр лёг в снимки
+
+# sound
+sounding	Звук
+
+# what sounds when the window goes
+sounding_what	Что звучит, когда уходишь из приложения
+
+# videos in the background
+film_behind	Видео в фоне
+
+# leaving a video while it plays, its sound goes on, with the phone's own sound keys; back on it, the picture goes on from where the sound got to
+film_behind_what	Уходишь с играющего видео — звук продолжается, с кнопками звука телефона; вернулся — картинка идёт с того места, где был звук
+
+# this video does not let its speed be changed
+speed_refused	Это видео не даёт менять скорость
+
+# paper
+paper	Бумага
+
+# size of the letters
+letter_size	Размер букв
+
+# day
+paper_day	Дневная
+
+# night
+paper_night	Ночная
+
+# sound of the pages
+page_sound	Звук страниц
+
+# edit in?
+edit_in	Изменить в…
+
+# turn
+turn	Повернуть
+
+# into the excerpts
+to_excerpts	В выписки
+
+# excerpts
+excerpts	Выписки
+
+# it is among the excerpts
+excerpt_kept	Легло в выписки
+
+# the name of a file or a folder
+find_hint	Имя файла или папки
+
+# words from the name of a file or of its folder; what has every one of them is found
+find_what	Слова из имени файла или его папки — найдётся то, где есть все
+
+# found: {n}
+found_n	Найдено: {n}
+
+# nothing by that name
+found_none	Ничего с таким именем
+
+# new name
+new_name	Новое имя
+
+# rename
+rename	Переименовать
+
+# delete
+delete	Удалить
+
+# again, and it is deleted
+delete_sure	Ещё раз — и удалится
+
+# renamed
+renamed	Переименовано
+
+# deleted
+deleted	Удалено
+
+# it could not be done
+not_done	Не получилось
+
+# the folder still allows reading only
+read_only	Папка по-прежнему только для чтения
+
+# a file of that name is already there
+name_taken	Файл с таким именем уже есть
+
+# the file is no longer where it was
+moved_away	Файла уже нет на прежнем месте
+
+# about the picture
+about_picture	О снимке
+
+# name
+fact_name	Название
+
+# taken
+fact_taken	Снят
+
+# camera
+fact_camera	Камера
+
+# lens
+fact_lens	Объектив
+
+# exposure
+fact_exposure	Экспозиция
+
+# size
+fact_size	Размер
+
+# where it was taken
+fact_where	Где снят
+
+# where it lies
+fact_lies	Где лежит
+
+# {n} mm
+mm_n	{n} мм
+
+# {n} MP
+mp_n	{n} Мп
+
+# {n} MB
+mb_n	{n} МБ
+
+# {n} KB
+kb_n	{n} КБ
+
+# touch up
+mend	Поправить
+
+# light
+mend_light	Свет
+
+# frame
+mend_frame	Кадр
+
+# as it is
+as_is	как есть
+
+# photograph
+for_photo	снимок
+
+# paper
+for_paper	лист
+
+# kept as a copy
+copy_kept	Сохранено копией
+
+# geometry
+mend_geometry	Геометрия
+
+# automatic
+p_auto	Авто
+
+# brightness
+p_bright	Яркость
+
+# contrast
+p_contrast	Контраст
+
+# warmth
+p_warm	Теплота
+
+# saturation
+p_saturation	Насыщенность
+
+# shape
+p_shape	Форма
+
+# closer
+p_closer	Приближение
+
+# angle
+p_angle	Угол
+
+# lean, up and down
+p_tilt_v	Наклон вверх-вниз
+
+# lean, side to side
+p_tilt_h	Наклон вбок
+
+# lens
+p_lens	Линза
+
+# sharpness
+p_sharp	Резкость
+
+# size
+p_size	Размер
+
+# take a picture
+shoot	Снять
+
+# no camera answers on this phone
+no_camera	На телефоне не нашлось камеры
+
+# taken and kept
+shot_kept	Снято и сохранено
+
+# the camera gave nothing back
+camera_empty	Камера ничего не вернула
+
+# free
+free	свободно
+
+# leave without keeping
+leave_unsaved	Выйти без сохранения
+
+# frame {n} of {m}
+frame_n	кадр {n} из {m}
+
+# piece
+recut_piece	Отрывок
+
+# words
+recut_words	Теги
+
+# title
+tag_title	Название
+
+# artist
+tag_artist	Исполнитель
+
+# album
+tag_album	Альбом
+
+# number
+tag_track	Номер
+
+# year
+tag_year	Год
+
+# the words are written
+words_kept	Теги записаны
+
+# to covers
+to_covers	В обложки
+
+# the cover is in the collection
+cover_taken	Обложка — в коллекции
+
+# covers taken: {n}
+covers_n	Обложек в коллекции: {n}
+
+# that cover is there already
+cover_there	Эта обложка уже есть
+
+# no cover in it
+cover_none	Обложки в записи нет
+
+# cover
+cover	Обложка
+
+# give it a cover
+set_cover	Поставить обложку
+
+# another cover
+change_cover	Сменить обложку
+
+# tags to text
+tags_to_text	Теги в текст
+
+# the tags are written down
+card_kept	Теги записаны в текст
+
+# cards written: {n}
+cards_n	Карточек записано: {n}
+
+# that card is there already
+card_there	Такая карточка уже есть
+
+# sleep
+sleep	Сон
+
+# never
+sleep_never	нет
+
+# at the end
+sleep_end	до конца
+
+# not set
+sleep_not_set	Не задан
+
+# quiet at {t}
+sleep_at	Замолкнет в {t}
+
+# after this one
+sleep_after_this	После этой записи
+
+# {n} min
+minutes_n	{n} мин
+
+# again
+again	Повтор
+
+# no
+again_none	нет
+
+# this one
+again_one	запись
+
+# the folder
+again_folder	папка
+
+# the run before
+log_before	предыдущий запуск
+
+# the whole shelf
+whole_shelf	Вся полка
+
+# pictures
+seeing	Фото
+
+# how pictures are shown
+seeing_what	Как показываются снимки
+
+# full brightness
+bright	Полная яркость
+
+# an opened picture lights the screen at its brightest, for as long as it is open
+bright_what	Открытый снимок светит на всю яркость экрана, пока он открыт
+
+# always
+bright_always	Всегда
+
+# by the clock
+bright_hours	По часам
+
+# from
+bright_from	С
+
+# until
+bright_to	До
+
+# January
+month_1	Январь
+
+# February
+month_2	Февраль
+
+# March
+month_3	Март
+
+# April
+month_4	Апрель
+
+# May
+month_5	Май
+
+# June
+month_6	Июнь
+
+# July
+month_7	Июль
+
+# August
+month_8	Август
+
+# September
+month_9	Сентябрь
+
+# October
+month_10	Октябрь
+
+# November
+month_11	Ноябрь
+
+# December
+month_12	Декабрь
+
+# with subfolders
+deep_on	С подпапками
+
+# without subfolders
+deep_off	Без подпапок
+
+# forget the folder
+forget	Забыть папку
+
+# press again to forget
+forget_sure	Нажми ещё раз, чтобы забыть
+
+# from the whole phone
+whole	Со всего телефона
+
+# every book the phone knows of, wherever it lies; turning it on opens the system's page for access to every file
+whole_what	Все книги, о которых знает телефон, где бы они ни лежали. Включишь — откроется страница системы с доступом ко всем файлам
+
+# allow in the system settings
+allow	Разрешить в настройках системы
+
+# phone
+on_phone	Телефон
+
+# card
+on_card	Карта
+
+# read without distractions
+quiet	Читать без помех
+
+# the middle of the page brings everything back
+quiet_hint	Тап в середину страницы вернёт всё обратно
+
+# bring everything back
+quiet_off	Вернуть всё
+
+# p. {n}
+page_short	стр. {n}
+
+# in the room: {n}
+in_room	В зале: {n}
+
+# still listening
+continue_sound	Недослушанное
+
+# stopped at {t}
+left_at	остановлено на {t}
+
+# recordings are gathered from the folders you open, and from everything inside them
+sounds_what	Записи собираются из открытых папок и всего, что лежит у них внутри
+
+# done
+done	Готово
+
+# copy
+copy	Копировать
+
+# copied
+copied	Скопировано
+
+# the whole page
+all_text	Вся страница
+
+# read aloud from here
+aloud_here	Читать вслух отсюда
+
+# share
+share	Поделиться
+
+# depth of glass
+glass	Глубина стекла
+
+# how dark the widget lies over the wallpaper, in tenths
+glass_what	Насколько темно виджет ложится на обои, в десятых
+
+# of {n} pages
+page_of	из {n} стр.
+
+# of {t}
+time_of	из {t}
+
+# widget
+widget	Виджет
+
+# how the widget on the home screen looks
+widget_what	Как выглядит виджет на домашнем экране
+
+# ground
+ground	Подложка
+
+# the seed
+ground_seed	Семя
+
+# glass
+ground_glass	Стекло
+
+# key
+key_face	Клавиша
+
+# gold ball
+key_ball	Золотой шар
+
+# record
+key_disc	Пластинка
+
+# scale
+scale	Шкала
+
+# drum
+scale_drum	Барабан
+
+# thread
+scale_thread	Нить
+
+# journal
+log	Журнал
+
+# what the application did, to send when something goes wrong
+log_what	Что делало приложение — отправить, если что-то пошло не так
+
+# copy the journal
+log_copy	Скопировать журнал
+

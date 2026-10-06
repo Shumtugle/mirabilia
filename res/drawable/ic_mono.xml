@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The three shapes in one ink, for themed icons: the ball, the stem of
+     the letter under it, and the star beside them. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28.80,37.08a10.80,10.80 0 1,0 21.60,0a10.80,10.80 0 1,0 -21.60,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28.44,64.44A11.16,11.16 0 0 1 50.76,64.44V108H28.44Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M69.120,40.320Q72.175,55.265 87.120,58.320Q72.175,61.375 69.120,76.320Q66.065,61.375 51.120,58.320Q66.065,55.265 69.120,40.320Z" />
+</vector>

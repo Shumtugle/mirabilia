@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The bold widget is one picture, drawn in the application's own language,
+     with touch zones laid over it in the same proportions the picture uses:
+     the words on the left open the music room, the ball on the right holds
+     or goes on, the two small discs under it go back and on. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/w_face"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/app_name" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <FrameLayout
+            android:id="@+id/w_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="62" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="38"
+            android:orientation="vertical">
+            <FrameLayout
+                android:id="@+id/w_ball"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="58" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="42"
+                android:orientation="horizontal">
+                <FrameLayout
+                    android:id="@+id/w_back"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+                <FrameLayout
+                    android:id="@+id/w_fwd"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
