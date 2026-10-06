@@ -738,3 +738,9 @@ log_what	Что делало приложение — отправить, есл
 # copy the journal
 log_copy	Скопировать журнал
 
+
+# passer-by
+passer_by	Прохожий
+
+# the voice did not answer, and reading aloud stopped
+voice_silent	Голос не ответил, и чтение вслух остановлено

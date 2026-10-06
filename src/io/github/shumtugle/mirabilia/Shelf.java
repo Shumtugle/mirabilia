@@ -44,6 +44,11 @@ final class Shelf {
         final long modified;
         final String folder;
         final String place;
+        /**
+         * Handed over from outside to be heard and nothing more: no place is
+         * kept for it, no mark, no line among the recordings heard.
+         */
+        boolean passing;
 
         Item(String name, Uri uri, String mime, long size, long modified, String folder) {
             this(name, uri, mime, size, modified, folder, placeOf(uri));

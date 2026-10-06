@@ -62,6 +62,7 @@ public final class Words {
         "widget", "widget_what", "ground", "ground_seed", "ground_glass",
         "key_face", "key_ball", "key_disc", "scale", "scale_drum", "scale_thread",
         "log", "log_what", "log_copy",
+        "passer_by", "voice_silent",
     };
 
     private static final String[] EN = {
@@ -144,6 +145,7 @@ public final class Words {
         "widget", "how the widget on the home screen looks", "ground", "the seed", "glass",
         "key", "gold ball", "record", "scale", "drum", "thread",
         "journal", "what the application did, to send when something goes wrong", "copy the journal",
+        "passer-by", "the voice did not answer, and reading aloud stopped",
     };
 
     private static final Map<String, String> TABLE = new LinkedHashMap<String, String>();

@@ -104,6 +104,8 @@ public final class Sound extends Service
     private boolean ducked;
     private boolean noisyOn;
     private boolean foreground;
+    /** What played before a passer-by came, to be held ready again when it has gone. */
+    private String hostKey;
 
     // ------------------------------------------------------------ life
 
@@ -257,7 +259,9 @@ public final class Sound extends Service
             }
             return START_STICKY;
         }
-        if (OPEN.equals(act)) {
+        if (OPEN.equals(act) && intent.getBooleanExtra("passing", false)) {
+            welcome(intent);
+        } else if (OPEN.equals(act)) {
             voiceStop();
             String uri = intent.getStringExtra("uri");
             String key = intent.getStringExtra("key");
@@ -332,10 +336,69 @@ public final class Sound extends Service
 
     private void reload() {
         ArrayList<Shelf.Item> kept = Shelf.keptSounds(this);
-        String now = current() == null ? null : current().key();
+        Shelf.Item was = current();
+        String now = was == null ? null : was.key();
         list.clear();
         list.addAll(kept);
+        if (was != null && was.passing) {
+            /* A passer-by is in no folder and on no shelf: it stays at the end while it plays. */
+            list.add(was);
+            index = list.size() - 1;
+            return;
+        }
         index = now == null ? -1 : find(now);
+    }
+
+    /**
+     * A recording handed over to be heard and nothing more. What played
+     * before it keeps its place and is remembered as the host; an earlier
+     * passer-by is let go; the new one goes at the end of the list, where no
+     * folder runs on into it, and plays.
+     */
+    private void welcome(Intent intent) {
+        voiceStop();
+        String uri = intent.getStringExtra("uri");
+        if (uri == null) {
+            return;
+        }
+        Shelf.Item was = current();
+        if (was != null && !was.passing) {
+            save();
+            hostKey = was.key();
+        }
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list.get(i).passing) {
+                list.remove(i);
+            }
+        }
+        String mime = intent.getStringExtra("mime");
+        String name = intent.getStringExtra("name");
+        Shelf.Item it = new Shelf.Item(name == null ? "" : name, Uri.parse(uri),
+            mime == null ? "" : mime, 0L, 0L, "", "");
+        it.passing = true;
+        list.add(it);
+        Trace.note("sound: a passer-by, " + Shelf.kind(it.name));
+        openAt(list.size() - 1, true);
+    }
+
+    /**
+     * The passer-by has been heard and goes, leaving nothing behind; the
+     * recording that played before it comes back, held where it was.
+     */
+    private void farewell() {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list.get(i).passing) {
+                list.remove(i);
+            }
+        }
+        index = -1;
+        int home = hostKey == null ? -1 : find(hostKey);
+        hostKey = null;
+        if (home >= 0) {
+            openAt(home, false);
+        } else {
+            stopAll();
+        }
     }
 
     /** Where a recording stands in the list, found by its place or by its address. */
@@ -404,7 +467,9 @@ public final class Sound extends Service
         index = at;
         final Shelf.Item it = list.get(at);
         /* Started again, a recording heard to its end is no longer that. */
-        Shelf.setDone(this, it.key(), false);
+        if (!it.passing) {
+            Shelf.setDone(this, it.key(), false);
+        }
         prepared = false;
         wanted = start;
         resuming = false;
@@ -425,7 +490,7 @@ public final class Sound extends Service
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer p) {
                 prepared = true;
-                long kept = Shelf.soundAt(Sound.this, it.key());
+                long kept = it.passing ? 0L : Shelf.soundAt(Sound.this, it.key());
                 long d = duration();
                 /* Coming back to a recording steps back a little, as coming
                    back from a pause does; nearly finished is the same as not
@@ -449,10 +514,12 @@ public final class Sound extends Service
             Trace.note("sound: prepare refused: " + e);
         }
         /* A video's sound is not a recording heard: it is not put among them. */
-        if (it.mime == null || !it.mime.startsWith("video/")) {
+        if (!it.passing && (it.mime == null || !it.mime.startsWith("video/"))) {
             Shelf.heard(this, it);
         }
-        Keep.heardMusic(this);
+        if (!it.passing) {
+            Keep.heardMusic(this);
+        }
         describe(it);
         told();
     }
@@ -726,7 +793,7 @@ public final class Sound extends Service
     @Override
     public void onCompletion(MediaPlayer p) {
         Shelf.Item it = current();
-        if (it != null) {
+        if (it != null && !it.passing) {
             Shelf.setSoundAt(this, it.key(), 0L);
             Shelf.setDone(this, it.key(), true);
         }
@@ -742,6 +809,10 @@ public final class Sound extends Service
         if (how == Keep.AGAIN_ONE) {
             seekTo(0L);
             play();
+            return;
+        }
+        if (it != null && it.passing) {
+            farewell();
             return;
         }
         int then = after(index);
@@ -777,7 +848,7 @@ public final class Sound extends Service
 
     private void save() {
         Shelf.Item it = current();
-        if (it != null && prepared) {
+        if (it != null && prepared && !it.passing) {
             Shelf.setSoundAt(this, it.key(), position());
         }
     }
@@ -927,6 +998,54 @@ public final class Sound extends Service
     private int queuedTo;
     private int pendingFrom = -1;
 
+    /** How deep the voice's queue is filled at a time, and how near its bottom the next stretch is poured in. */
+    private static final int STRETCH = 600;
+    private static final int TOP_UP = 50;
+
+    /*
+     * An engine can take the words and never begin: no start, no error, and
+     * the strip breathes over silence while the processor is kept awake for
+     * nothing. A start is waited for this long after the words are handed
+     * over; without one the engine is closed, made anew and asked once more,
+     * and if it is silent again the reading stops and says so.
+     */
+    private static final long VOICE_WAIT_MS = 3000L;
+    private int silentTries;
+    private static String trouble;
+
+    private final Runnable mute = new Runnable() {
+        public void run() {
+            if (!voiceOn || voiceHeld) {
+                return;
+            }
+            if (silentTries == 0) {
+                silentTries = 1;
+                Trace.note("sound: the voice did not begin; its engine is woken again");
+                int at = voiceChar();
+                try {
+                    tts.shutdown();
+                } catch (Exception ignored) {
+                    // an engine that will not close is left behind all the same
+                }
+                tts = null;
+                ttsReady = false;
+                voiceFrom(at);
+            } else {
+                silentTries = 0;
+                Trace.note("sound: the voice is silent again; reading aloud stops");
+                trouble = "voice_silent";
+                voiceStop();
+            }
+        }
+    };
+
+    /** A word for the window, left by the service when something went wrong out of sight; taken once. */
+    static String takeTrouble() {
+        String t = trouble;
+        trouble = null;
+        return t;
+    }
+
     boolean voiceOn() {
         return voiceOn;
     }
@@ -1070,14 +1189,19 @@ public final class Sound extends Service
         tts.setAudioAttributes(new AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build());
-        queuedTo = Math.min(pieces.size(), idx + 600) - 1;
+        queuedTo = Math.min(pieces.size(), idx + STRETCH) - 1;
         tts.setOnUtteranceProgressListener(new android.speech.tts.UtteranceProgressListener() {
             public void onStart(final String id) {
                 ui.post(new Runnable() {
                     public void run() {
                         int at = Integer.parseInt(id);
+                        ui.removeCallbacks(mute);
+                        silentTries = 0;
                         if (voiceOn && !voiceHeld) {
                             voiceAwake(true);
+                            if (at >= queuedTo - TOP_UP && queuedTo + 1 < pieces.size()) {
+                                voiceMore();
+                            }
                         }
                         if (at != voiceAt) {
                             voiceAt = at;
@@ -1102,7 +1226,7 @@ public final class Sound extends Service
                     public void run() {
                         if (voiceOn && !voiceHeld && Integer.parseInt(id) >= queuedTo) {
                             if (queuedTo + 1 < pieces.size()) {
-                                /* The queue ran out before the book did: hand over the next stretch. */
+                                /* The queue ran dry before the top-up reached it: the next stretch starts afresh. */
                                 voiceFrom(starts.get(queuedTo + 1).intValue());
                             } else {
                                 voiceStop();
@@ -1115,8 +1239,14 @@ public final class Sound extends Service
             public void onError(String id) {
                 Trace.note("sound: the voice fell on piece " + id);
             }
+
+            @Override
+            public void onError(String id, int code) {
+                Trace.note("sound: the voice fell on piece " + id + ", reason " + code);
+            }
         });
-        int most = android.speech.tts.TextToSpeech.getMaxSpeechInputLength() - 16;
+        ui.removeCallbacks(mute);
+        boolean taken = true;
         for (int i = idx; i <= queuedTo; i++) {
             String t = i == idx
                 ? voiceText.substring(start, Math.max(start, paragraphEnd(idx))).trim()
@@ -1124,15 +1254,46 @@ public final class Sound extends Service
             if (t.length() == 0) {
                 t = pieces.get(i);
             }
-            if (t.length() > most) {
-                t = t.substring(0, most);
+            int said = say(t, i, i == idx);
+            if (i == idx && said != android.speech.tts.TextToSpeech.SUCCESS) {
+                Trace.note("sound: the voice refused the first words, " + said);
+                taken = false;
+                break;
             }
-            tts.speak(t, i == idx ? android.speech.tts.TextToSpeech.QUEUE_FLUSH
-                : android.speech.tts.TextToSpeech.QUEUE_ADD, null, String.valueOf(i));
         }
+        /* Refused outright is silence known at once; taken, a start is waited for. */
+        ui.postDelayed(mute, taken ? VOICE_WAIT_MS : 0L);
         showNote();
         told();
         spoken();
+    }
+
+    /** One paragraph handed to the voice, cut to what an engine takes at once. */
+    private int say(String t, int id, boolean first) {
+        int most = android.speech.tts.TextToSpeech.getMaxSpeechInputLength() - 16;
+        if (t.length() > most) {
+            t = t.substring(0, most);
+        }
+        return tts.speak(t, first ? android.speech.tts.TextToSpeech.QUEUE_FLUSH
+            : android.speech.tts.TextToSpeech.QUEUE_ADD, null, String.valueOf(id));
+    }
+
+    /**
+     * The next stretch poured in while the voice is still deep in this one,
+     * so it goes on without a seam: added behind what is queued, never
+     * flushing it.
+     */
+    private void voiceMore() {
+        if (tts == null || !ttsReady) {
+            return;
+        }
+        int from = queuedTo + 1;
+        int to = Math.min(pieces.size(), from + STRETCH) - 1;
+        for (int i = from; i <= to; i++) {
+            say(pieces.get(i), i, false);
+        }
+        queuedTo = to;
+        Trace.note("sound: the voice's queue topped up to " + (to + 1) + " of " + pieces.size());
     }
 
     private void voiceAwake(boolean on) {
@@ -1162,6 +1323,7 @@ public final class Sound extends Service
             return;
         }
         voiceHeld = true;
+        ui.removeCallbacks(mute);
         voiceAwake(false);
         if (tts != null) {
             tts.stop();
@@ -1231,6 +1393,7 @@ public final class Sound extends Service
         voiceKeep();
         voiceOn = false;
         voiceHeld = false;
+        ui.removeCallbacks(mute);
         voiceAwake(false);
         if (tts != null) {
             tts.stop();
@@ -1409,13 +1572,21 @@ public final class Sound extends Service
 
     // ------------------------------------------------------------ the shade
 
+    /** The line under a recording's name: its folder, or, for a passer-by, what it is. */
+    static String where(Shelf.Item it) {
+        if (it.passing) {
+            return Words.s("passer_by");
+        }
+        return it.folder == null ? "" : it.folder;
+    }
+
     private void describe(Shelf.Item it) {
         if (session == null) {
             return;
         }
         session.setMetadata(new MediaMetadata.Builder()
             .putString(MediaMetadata.METADATA_KEY_TITLE, Shelf.label(it))
-            .putString(MediaMetadata.METADATA_KEY_ALBUM, it.folder == null ? "" : it.folder)
+            .putString(MediaMetadata.METADATA_KEY_ALBUM, where(it))
             .putLong(MediaMetadata.METADATA_KEY_DURATION, duration())
             .build());
     }
@@ -1467,7 +1638,7 @@ public final class Sound extends Service
         Notification.Builder note = new Notification.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_mono)
             .setContentTitle(voiceOn ? voiceTitle : (it == null ? Words.s("music") : Shelf.label(it)))
-            .setContentText(voiceOn ? voiceSaying() : (it == null || it.folder == null ? "" : it.folder))
+            .setContentText(voiceOn ? voiceSaying() : (it == null ? "" : where(it)))
             .setContentIntent(open)
             .setOngoing(on)
             .setShowWhen(false)

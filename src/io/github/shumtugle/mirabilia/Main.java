@@ -200,6 +200,10 @@ public final class Main extends Activity {
             public void heard() {
                 syncTune(true);
                 voiceShown();
+                String trouble = Sound.takeTrouble();
+                if (trouble != null) {
+                    flash(Glyph.BOOK, Words.s(trouble));
+                }
             }
 
             public void spoke() {
@@ -3324,6 +3328,13 @@ public final class Main extends Activity {
         go.putExtra("uri", it.uri.toString());
         go.putExtra("key", it.key());
         go.putExtra("name", it.name);
+        if (it.passing) {
+            /* Handed over from outside: the leave to read it goes on to the player. */
+            go.putExtra("passing", true);
+            go.putExtra("mime", it.mime);
+            go.setClipData(android.content.ClipData.newRawUri("", it.uri));
+            go.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
         startForegroundService(go);
         Trace.note("hear " + Shelf.kind(it.name));
     }
@@ -3802,7 +3813,8 @@ public final class Main extends Activity {
 
     /**
      * A recording handed over by another application — a file manager, a
-     * message: it plays, and its screen opens over the music room.
+     * message: it plays as a passer-by, kept nowhere, and its screen opens
+     * over the music room.
      */
     private boolean handed(Intent intent) {
         if (intent == null || !Intent.ACTION_VIEW.equals(intent.getAction())
@@ -3830,7 +3842,8 @@ public final class Main extends Activity {
                 q.close();
             }
         }
-        final Shelf.Item it = new Shelf.Item(name == null ? "" : name, where, type, 0L, 0L, "");
+        final Shelf.Item it = new Shelf.Item(name == null ? "" : name, where, type, 0L, 0L, "", "");
+        it.passing = true;
         if (room != MUSIC || open()) {
             enter(MUSIC);
         }

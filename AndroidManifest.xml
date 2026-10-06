@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.shumtugle.mirabilia"
-    android:versionCode="1004"
-    android:versionName="0.9.9.14">
+    android:versionCode="1005"
+    android:versionName="0.9.9.15">
 
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="33" />
 
@@ -51,8 +51,9 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Recordings handed over by a file manager or a message: they
-                 play, and their own screen opens over the music room. -->
+            <!-- Recordings opened from a file manager or a message: they play
+                 as passers-by, kept nowhere, and their own screen opens over
+                 the music room. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -62,6 +63,20 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="file" android:mimeType="audio/*" />
+            </intent-filter>
+        </activity>
+        <!-- A recording shared to be heard and nothing more: no window opens,
+             it plays as a passer-by and leaves nothing behind. -->
+        <activity
+            android:name=".Visitor"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
             </intent-filter>
         </activity>
         <!-- The widget for the home screen: what sounds, a recording or a book

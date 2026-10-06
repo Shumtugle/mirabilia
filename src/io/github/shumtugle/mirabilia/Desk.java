@@ -547,13 +547,16 @@ final class Desk {
         numeral.setLetterSpacing(0.15f);
         boolean film = !now.voice && now.item != null && now.item.mime != null
             && now.item.mime.startsWith("video/");
-        canvas.drawText(now.voice ? "IV" : (film ? "II" : "III"), pad + 32 * u, pad + 12.5f * u, numeral);
+        /* A passer-by belongs to no room: no numeral, and the word says what it is. */
+        boolean passing = !now.voice && now.item != null && now.item.passing;
+        canvas.drawText(passing ? "" : (now.voice ? "IV" : (film ? "II" : "III")), pad + 32 * u,
+            pad + 12.5f * u, numeral);
         TextPaint small = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         small.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         small.setTextSize(12 * u);
         small.setColor(ink.soft);
-        canvas.drawText(Words.s(now.voice ? "books" : (film ? "films" : "music")), pad + 58 * u, pad + 12.5f * u,
-            small);
+        canvas.drawText(Words.s(passing ? "passer_by" : (now.voice ? "books" : (film ? "films" : "music"))),
+            passing ? pad + 32 * u : pad + 58 * u, pad + 12.5f * u, small);
 
         /* The name, two lines at most, in the book face. */
         TextPaint title = new TextPaint(Paint.ANTI_ALIAS_FLAG);

@@ -117,6 +117,12 @@ The round button puts the voice away first — the strip sinks and the field
 rises — and keeps its place in the book; reading aloud there again goes on
 from that place. Every return steps back three and a half seconds, so the
 thought is picked up and not only the word.
+The book is handed to the voice six hundred paragraphs at a time, and the
+next six hundred are poured in fifty before the bottom, so a long book
+runs on without a seam. A voice that takes the words and never begins is
+not trusted: if it has not started within three seconds it is closed, made
+anew and asked once more, and if it is silent again the reading stops and
+says so, rather than breathing over silence.
 Touching the words steps the voice through five paces. Holding them raises
 a dial — every paragraph a tick on a curving drum under a fixed needle, the
 page and the minutes to it above — and the same finger, still down, turns
@@ -558,6 +564,15 @@ that grows from the finger offers to share. The file goes to the system's
 chooser — a chat, a mail, a drive — by its own address with leave to read
 it, which lasts as long as whoever takes it needs it; nothing is copied. A
 recording shares itself from its own screen as well.
+
+**A passer-by.** A recording shared to the application from a file
+manager or a message plays at once, behind whatever is on the screen; no
+window opens. It is heard and kept nowhere: no place in it is remembered,
+it is not marked as heard, it does not join the recordings heard, and no
+folder runs on into it. The widget names it a passer-by instead of a room,
+and so does the notification. When it ends, the recording that played
+before it comes back, held where it was. A recording opened rather than
+shared is a passer-by as well, and its screen opens over the music room.
 
 **The ruler.** A long list — the shelf, the room of recordings, a folder —
 has a string of pearls down its right edge. While the list moves, one pearl
