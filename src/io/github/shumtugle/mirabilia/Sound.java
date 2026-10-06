@@ -485,6 +485,7 @@ public final class Sound extends Service
     }
 
     private void release() {
+        ui.removeCallbacks(settle);
         if (player != null) {
             try {
                 player.release();
@@ -537,10 +538,19 @@ public final class Sound extends Service
                 seekRaw(Math.max(0L, p - rollback()));
             }
         }
+        ui.removeCallbacks(settle);
+        boolean around = detour();
         try {
             player.setVolume(1f, 1f);
+            if (around) {
+                paceOff();
+            }
             player.start();
-            speed();
+            if (around) {
+                ui.postDelayed(settle, DETOUR_MS);
+            } else {
+                speed();
+            }
         } catch (Exception e) {
             Trace.note("sound: start refused: " + e);
             return;
@@ -626,6 +636,53 @@ public final class Sound extends Service
             seekTo(0L);
         } else {
             openAt(was, true);
+        }
+    }
+
+    /*
+     * Long AAC recordings (m4a, m4b) go silent on some phones at the natural
+     * pace: the platform hands an audio-only file straight to the phone's
+     * sound processor, and that processor plays nothing while the clock runs
+     * on. Any other pace keeps the sound on the ordinary road, and the road is
+     * not given back when the pace returns to one. So such a recording starts
+     * a hair slower and is set right a second later. It is done at every
+     * start, not once per file, in case a pause hands the file back.
+     */
+    private static final long DETOUR_MS = 1000L;
+    private static final float DETOUR_PACE = 0.99f;
+
+    private final Runnable settle = new Runnable() {
+        public void run() {
+            speed();
+        }
+    };
+
+    /** A recording of the kind the sound processor may swallow, at the natural pace. */
+    private boolean detour() {
+        Shelf.Item it = current();
+        if (it == null || Shelf.pace(this, it) != 1f) {
+            return false;
+        }
+        String mime = it.mime == null ? "" : it.mime.toLowerCase(java.util.Locale.ROOT);
+        if (mime.startsWith("video/")) {
+            return false;
+        }
+        String kind = Shelf.kind(it.name);
+        return kind.equals("m4a") || kind.equals("m4b") || kind.equals("aac")
+            || mime.equals("audio/mp4") || mime.equals("audio/aac")
+            || mime.equals("audio/x-m4a") || mime.equals("audio/m4a")
+            || mime.equals("audio/mp4a-latm");
+    }
+
+    /** The hair-slower pace that keeps the sound on the ordinary road. */
+    private void paceOff() {
+        try {
+            PlaybackParams params = player.getPlaybackParams();
+            params.setSpeed(DETOUR_PACE);
+            player.setPlaybackParams(params);
+            Trace.note("sound: detour pace for " + Shelf.kind(current().name));
+        } catch (Exception e) {
+            Trace.note("sound: detour pace refused: " + e);
         }
     }
 
