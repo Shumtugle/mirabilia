@@ -554,6 +554,19 @@ recorder's notes and whatever lies in the applications' own folders, where
 messengers keep voice messages. The recordings' index is off until it is
 turned on.
 
+**The watch.** A room shows at once what it held last time, and is looked
+over behind the screen: when the application starts, and again whenever it
+comes back from another application or a dark screen after more than a
+minute away — the folders walked, the phone's index read. A room is drawn
+anew only if the look found otherwise, so nobody is thrown back to the top
+for nothing. The room's numeral is its watch: it breathes while the room is
+looked over, and, touched, looks it over at once, saying so when nothing
+is new. A line among the ones read or heard last whose file another
+application deleted or moved is looked for after every walk and hidden
+while it is not found — hidden, not forgotten, so a memory card put back
+brings it back; touched before the walk has noticed, it says the file is
+gone instead of opening an empty screen.
+
 **A folder's order.** At the head of a folder's screen a capsule of two
 halves: by number, as the names read, or by time, in the order the files
 came, for a folder whose names do not tell. The choice is kept for that

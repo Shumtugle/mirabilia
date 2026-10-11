@@ -136,6 +136,21 @@ public final class Main extends Activity {
     private final ArrayList<Shelf.Item> books = new ArrayList<Shelf.Item>();
     boolean gathered;
     private boolean gathering;
+    /**
+     * The numeral of the room on the screen is the room's watch: it breathes
+     * while the room is looked over — its folders walked, or the phone's
+     * index read — and, touched, looks it over at once.
+     */
+    private TextView numeral;
+    private int numeralRoom = -1;
+    private android.animation.ObjectAnimator breath;
+    /** The room a hand asked to look over: it is answered even when nothing changed. */
+    private int watchAsked = -1;
+    /** When the folders were walked and the index read, to know on coming back whether to look again. */
+    private long walkedAt;
+    private long readAt;
+    /** Coming back after this long, the rooms are looked over again behind the screen. */
+    private static final long STALE_MS = 60000L;
 
     /** The book in front, and whichever of the three pages is showing it. */
     private Shelf.Item book;
@@ -1233,12 +1248,105 @@ public final class Main extends Activity {
         return which == FILMS ? filmAlbums : albums;
     }
 
+    /** The numeral of a room, which is also its watch. */
+    private TextView numeral(final int which) {
+        TextView number = Letter.serif(words(Letter.TITLE_M, ROOM_NUMBERS[which], Tone.PRIMARY));
+        number.setLetterSpacing(0.15f);
+        /* A finger's room around a small numeral, taken back by the margins: the line does not move. */
+        int pad = Round.dp(12);
+        number.setPadding(0, pad, Round.dp(32), pad);
+        number.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                watch(which);
+            }
+        });
+        if (breath != null) {
+            breath.cancel();
+            breath = null;
+        }
+        numeral = number;
+        numeralRoom = which;
+        breathe();
+        return number;
+    }
+
+    private LinearLayout.LayoutParams numeralPlace() {
+        LinearLayout.LayoutParams at = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        at.topMargin = -Round.dp(12);
+        at.bottomMargin = -Round.dp(12);
+        return at;
+    }
+
+    /** Whether a room is being looked over now. */
+    private boolean looking(int which) {
+        if (which == BOOKS || which == MUSIC) {
+            return gathering;
+        }
+        if (which == PICTURES) {
+            return photosReading;
+        }
+        return which == FILMS && filmsReading;
+    }
+
+    /** The numeral breathes while its room is looked over, and stands still when the look is done. */
+    private void breathe() {
+        boolean busy = numeral != null && looking(numeralRoom);
+        if (busy && breath == null) {
+            breath = android.animation.ObjectAnimator.ofFloat(numeral, "alpha", 1f, 0.3f);
+            breath.setDuration(Pace.ARRIVE * 2);
+            breath.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+            breath.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+            breath.start();
+        } else if (!busy && breath != null) {
+            breath.cancel();
+            breath = null;
+            numeral.animate().alpha(1f).setDuration(Pace.LEAVE).start();
+        }
+    }
+
+    /** Asked by hand: the room is looked over now, and the answer is given even if nothing changed. */
+    private void watch(int which) {
+        if (looking(which)) {
+            return;
+        }
+        watchAsked = which;
+        Trace.note("looking over room " + which);
+        if (which == BOOKS || which == MUSIC) {
+            gather();
+        } else {
+            readMedia(which, true);
+        }
+    }
+
+    /** Whether the index read again holds the same pictures in the same order. */
+    private static boolean samePictures(ArrayList<Gallery.Photo> a, ArrayList<Gallery.Photo> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        for (int i = 0; i < a.size(); i++) {
+            if (a.get(i).id != b.get(i).id) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void readPhotos() {
         readMedia(PICTURES);
     }
 
     /** The phone's index of pictures or of films, read away from the screen; the room is drawn again when it is. */
     private void readMedia(final int which) {
+        readMedia(which, false);
+    }
+
+    /**
+     * Read again behind a room already shown, the room is drawn anew only if
+     * the index now says otherwise, so a look that finds nothing new does
+     * not throw the reader back to the top.
+     */
+    private void readMedia(final int which, final boolean onlyIfChanged) {
         if (which == FILMS ? filmsReading : photosReading) {
             return;
         }
@@ -1247,6 +1355,7 @@ public final class Main extends Activity {
         } else {
             photosReading = true;
         }
+        breathe();
         final android.content.Context app = getApplicationContext();
         new Thread(new Runnable() {
             public void run() {
@@ -1254,6 +1363,7 @@ public final class Main extends Activity {
                 final ArrayList<Gallery.Album> by = Gallery.albums(all);
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        boolean changed = !samePictures(itemsOf(which), all);
                         itemsOf(which).clear();
                         itemsOf(which).addAll(all);
                         albumsOf(which).clear();
@@ -1264,6 +1374,17 @@ public final class Main extends Activity {
                         } else {
                             photosRead = true;
                             photosReading = false;
+                        }
+                        readAt = System.currentTimeMillis();
+                        breathe();
+                        if (watchAsked == which) {
+                            watchAsked = -1;
+                            if (!changed) {
+                                flash(Glyph.TICK, Words.s("nothing_new"));
+                            }
+                        }
+                        if (onlyIfChanged && !changed) {
+                            return;
                         }
                         if (room == which && !open()) {
                             forgetScene();
@@ -1374,9 +1495,7 @@ public final class Main extends Activity {
     private View galleryView(final int which) {
         boolean films = which == FILMS;
         LinearLayout column = column();
-        TextView number = Letter.serif(words(Letter.TITLE_M, ROOM_NUMBERS[which], Tone.PRIMARY));
-        number.setLetterSpacing(0.15f);
-        column.addView(number);
+        column.addView(numeral(which), numeralPlace());
         TextView name = words(Letter.DISPLAY_S, Words.s(ROOM_WORDS[which]), Tone.ON_SURFACE);
         LinearLayout.LayoutParams nameParams = wide();
         nameParams.topMargin = Round.dp(6);
@@ -2178,9 +2297,7 @@ public final class Main extends Activity {
      */
     private View booksView() {
         LinearLayout column = column();
-        TextView number = Letter.serif(words(Letter.TITLE_M, ROOM_NUMBERS[BOOKS], Tone.PRIMARY));
-        number.setLetterSpacing(0.15f);
-        column.addView(number);
+        column.addView(numeral(BOOKS), numeralPlace());
         TextView name = words(Letter.DISPLAY_S, Words.s(ROOM_WORDS[BOOKS]), Tone.ON_SURFACE);
         LinearLayout.LayoutParams nameParams = wide();
         nameParams.topMargin = Round.dp(6);
@@ -2388,6 +2505,7 @@ public final class Main extends Activity {
         }
         gathering = true;
         soundsGathering = true;
+        breathe();
         final android.content.Context app = getApplicationContext();
         final long began = System.currentTimeMillis();
         new Thread(new Runnable() {
@@ -2395,12 +2513,13 @@ public final class Main extends Activity {
                 final Shelf.Found found = Shelf.gatherAll(app);
                 Shelf.keep(app, found.books);
                 Shelf.keepSounds(app, found.sounds);
+                final boolean ghosts = Shelf.lookForRemembered(app, found.books, found.sounds);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         /* The placeholder is always replaced; a room already
                            showing is redrawn only if the walk found otherwise. */
-                        boolean booksChanged = !gathered || !same(books, found.books);
-                        boolean soundsChanged = !soundsGathered || !same(sounds, found.sounds);
+                        boolean booksChanged = !gathered || !same(books, found.books) || ghosts;
+                        boolean soundsChanged = !soundsGathered || !same(sounds, found.sounds) || ghosts;
                         books.clear();
                         books.addAll(found.books);
                         sounds.clear();
@@ -2412,6 +2531,14 @@ public final class Main extends Activity {
                         Trace.note("one walk: " + found.books.size() + " books, "
                             + found.sounds.size() + " recordings in "
                             + (System.currentTimeMillis() - began) + " ms");
+                        walkedAt = System.currentTimeMillis();
+                        breathe();
+                        if (watchAsked == BOOKS || watchAsked == MUSIC) {
+                            watchAsked = -1;
+                            if (!((room == BOOKS && booksChanged) || (room == MUSIC && soundsChanged))) {
+                                flash(Glyph.TICK, Words.s("nothing_new"));
+                            }
+                        }
                         if (open()) {
                             return;
                         }
@@ -2575,9 +2702,7 @@ public final class Main extends Activity {
      */
     private View musicView() {
         LinearLayout column = column();
-        TextView number = Letter.serif(words(Letter.TITLE_M, ROOM_NUMBERS[MUSIC], Tone.PRIMARY));
-        number.setLetterSpacing(0.15f);
-        column.addView(number);
+        column.addView(numeral(MUSIC), numeralPlace());
         TextView name = words(Letter.DISPLAY_S, Words.s(ROOM_WORDS[MUSIC]), Tone.ON_SURFACE);
         LinearLayout.LayoutParams nameParams = wide();
         nameParams.topMargin = Round.dp(6);
@@ -3345,6 +3470,19 @@ public final class Main extends Activity {
      * button goes back to the room, and the sound goes on behind it.
      */
     private void listen(Shelf.Item it) {
+        if (!it.passing && !Shelf.reachable(this, it)) {
+            /* Deleted or moved by another application since the last walk:
+               said at once, the line taken away, and the rooms looked over. */
+            Shelf.missing(it);
+            flash(Glyph.NOTE, Words.s("moved_away"));
+            Trace.note("a recording was not where it was");
+            if (!open()) {
+                forgetScene();
+                swap(roomView(room));
+            }
+            gather();
+            return;
+        }
         Sound s = Sound.live();
         boolean same = s != null && s.current() != null && s.current().uri.equals(it.uri);
         if (!same) {
@@ -6444,6 +6582,28 @@ public final class Main extends Activity {
             }
         }
         super.onPause();
+    }
+
+    /**
+     * Back from another application or a dark screen: what was made, deleted
+     * or moved meanwhile is looked for behind the rooms as they were, which
+     * show at once; a room is drawn anew only if the look found otherwise.
+     */
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        long now = System.currentTimeMillis();
+        if (now - walkedAt > STALE_MS && (gathered || soundsGathered)) {
+            gather();
+        }
+        if (now - readAt > STALE_MS) {
+            if (photosRead) {
+                readMedia(PICTURES, true);
+            }
+            if (filmsRead) {
+                readMedia(FILMS, true);
+            }
+        }
     }
 
     @Override

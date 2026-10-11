@@ -1711,9 +1711,75 @@ final class Shelf {
         ArrayList<Item> out = new ArrayList<Item>();
         for (int i = 0; i < remembered.size(); i++) {
             Item now = here.get(remembered.get(i).key());
+            if (now == null && MISSING.contains(remembered.get(i).key())) {
+                /* Remembered, off the shelf, and not found where it was: not shown. */
+                continue;
+            }
             out.add(now != null ? now : remembered.get(i));
         }
         return out;
+    }
+
+    /*
+     * A remembered file can be deleted or moved by another application while
+     * its line stays among the ones read or heard last, and a line that
+     * opens nothing is a ghost. After every walk the remembered lines that
+     * the walk did not find are looked for one by one; those not found are
+     * hidden, not forgotten, so a memory card put back brings them back.
+     */
+    private static final java.util.Set<String> MISSING =
+        java.util.Collections.synchronizedSet(new java.util.HashSet<String>());
+
+    /** Whether the file behind an item can still be opened. */
+    static boolean reachable(Context c, Item it) {
+        android.os.ParcelFileDescriptor p = null;
+        try {
+            p = c.getContentResolver().openFileDescriptor(it.uri, "r");
+            return p != null;
+        } catch (Exception gone) {
+            return false;
+        } finally {
+            if (p != null) {
+                try {
+                    p.close();
+                } catch (Exception ignored) {
+                    // a descriptor that will not close was open all the same
+                }
+            }
+        }
+    }
+
+    /** One file known gone, found on the spot rather than by a walk. */
+    static void missing(Item it) {
+        MISSING.add(it.key());
+    }
+
+    /** The remembered lines the walk did not find, looked for; called away from the screen. */
+    static boolean lookForRemembered(Context c, ArrayList<Item> books, ArrayList<Item> sounds) {
+        java.util.HashSet<String> on = new java.util.HashSet<String>();
+        for (int i = 0; i < books.size(); i++) {
+            on.add(books.get(i).key());
+        }
+        for (int i = 0; i < sounds.size(); i++) {
+            on.add(sounds.get(i).key());
+        }
+        ArrayList<Item> lines = new ArrayList<Item>(recent(c, 30));
+        lines.addAll(recentSounds(c, 30));
+        int hidden = 0;
+        boolean moved = false;
+        for (int i = 0; i < lines.size(); i++) {
+            Item it = lines.get(i);
+            if (on.contains(it.key()) || reachable(c, it)) {
+                moved |= MISSING.remove(it.key());
+            } else {
+                moved |= MISSING.add(it.key());
+                hidden++;
+            }
+        }
+        if (hidden > 0) {
+            Trace.note("shelf: remembered lines not found: " + hidden);
+        }
+        return moved;
     }
 
     private static void remember(Context c, Item it, String list) {

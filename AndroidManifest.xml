@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.shumtugle.mirabilia"
-    android:versionCode="1005"
-    android:versionName="0.9.9.15">
+    android:versionCode="1006"
+    android:versionName="0.9.9.16">
 
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="33" />
 
